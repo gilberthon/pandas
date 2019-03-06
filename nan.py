@@ -80,4 +80,22 @@ sampler = np.random.permutation(5)
 df = pd.DataFrame({'key': ['b', 'b', 'a', 'c', 'a', 'b'],
                    'data1': range(6)})
 dummies = pd.get_dummies(df['key'], prefix='key')
-print((df[['data1', 'key']].join(dummies)))
+# print((df[['data1', 'key']].join(dummies)))
+mname = ['movie_id', 'title', 'genres']
+movie = pd.read_table('datasets/movielens/movies.dat', sep='::', header=None, names=mname)
+all_genres = []
+for x in movie.genres:
+    all_genres.extend(x.split('|'))
+genres = pd.unique(all_genres)
+
+zero_matrix = np.zeros((len(movie), len(genres)))
+dummies = pd.DataFrame(zero_matrix, columns=genres)
+for i, gen in enumerate(movie.genres):
+    indices = dummies.columns.get_indexer(gen.split('|'))
+    dummies.iloc[i, indices] = 1
+movie_windic = movie.join(dummies.add_prefix('Genre_'))
+# print(movie_windic.iloc[0])
+value = np.random.rand(10)
+bins= [0., 0.2, 0.4, 0.6, 0.8, 1.]
+cats = pd.cut(value, bins)
+print(pd.get_dummies(cats))
