@@ -31,7 +31,7 @@ ds = pd.DataFrame({'food': ['bacon', 'pulled pork', 'bacon',
                             'Pastrami', 'corned beef', 'Bacon',
                             'pastrami', 'honey ham', 'nova lox'],
                    'ounces': [4, 3, 12, 6, 7.5, 8, 3, 5, 6]})
-print(ds)
+# print(ds)
 meat_to_animal = {
   'bacon': 'pig',
   'pulled pork': 'pig',
@@ -40,6 +40,44 @@ meat_to_animal = {
   'honey ham': 'pig',
   'nova lox': 'salmon'
 }
-d = ds['food'].map(lambda x: meat_to_animal[str.lower(x)])
+d = ds['food'].map(lambda x: meat_to_animal[x.lower()])
 ds['animal'] = d
-print(ds)
+# print(ds)
+
+ser = pd.Series([1., -999., 2., -999., -1000., 3.])
+# print(ser)
+ser.replace([-999, -1000], [NA, 0], inplace=True)
+# print(ser)
+
+df = pd.DataFrame(np.arange(12).reshape(3, 4),
+                  index=['Ohio', 'Colorado', 'New York'],
+                  columns=['one', 'two', 'three', 'four'])
+# print(df)
+df.rename(index=str.title, columns=str.upper, inplace=True)
+# print(df)
+
+ages = [20, 22, 25, 27, 21, 23, 37, 31, 61, 45, 41, 32]
+bins = [18, 25, 35, 60, 100]
+group_names = ['Youth', 'YoungAdult', 'MiddleAged', 'Senior']
+cats = pd.cut(ages, bins, labels=group_names)
+# print(cats)
+# print(cats.categories)
+
+df = np.random.rand(1000)
+cats = pd.qcut(df, 4, precision=2)
+# print(cats.value_counts())
+
+data = pd.DataFrame(np.random.randn(1000, 4))
+col = data
+# print(data[(np.abs(col) > 3).any(1)])
+# print(np.abs(data) > 3)
+
+df = pd.DataFrame(np.arange(5 * 4).reshape(5, 4))
+sampler = np.random.permutation(5)
+# print(sampler)
+# print(df.take(sampler))
+# print(df.sample(1))
+df = pd.DataFrame({'key': ['b', 'b', 'a', 'c', 'a', 'b'],
+                   'data1': range(6)})
+dummies = pd.get_dummies(df['key'], prefix='key')
+print((df[['data1', 'key']].join(dummies)))
